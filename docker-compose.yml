@@ -1,0 +1,9 @@
+services:
+  dvr:
+    image: ghcr.io/prodYakkai/srs-dvr:latest
+    ports:
+    - "5000:5000"
+    env_file:
+      - .env
+    volumes:
+      - ./data:/data # Or wherever you mount srs's dvr path
