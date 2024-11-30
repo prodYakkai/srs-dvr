@@ -1,6 +1,6 @@
 services:
   dvr:
-    image: ghcr.io/prodYakkai/srs-dvr:latest
+    image: ghcr.io/prodYakkai/srs-dvr:main
     ports:
     - "5000:5000"
     env_file:

@@ -55,6 +55,7 @@ def upload_file_azure():
         app.logger.debug("Time taken to upload file: %s", time.time() - start_time)
     except Exception as e:
         app.logger.error("Failed to upload file: %s", str(e))
+        os.remove(file_path)
         return jsonify({"error": f"Failed to upload file: {str(e)}", "code": -1}), 500
 
     # Delete the file from the local server
@@ -90,7 +91,15 @@ def upload_file_s3():
         app.logger.debug("Time taken to upload file: %s", time.time() - start_time)
     except Exception as e:
         app.logger.error("Failed to upload file: %s", str(e))
+        os.remove(file_path)
         return jsonify({"error": f"Failed to upload file: {str(e)}", "code": -1}), 500
+    
+    # Delete the file from the local server
+    try:
+        os.remove(file_path)
+    except Exception as e:
+        app.logger.error("Failed to delete file: %s", str(e))
+        return jsonify({"error": f"Failed to delete file: {str(e)}", "code": -1}), 500
 
 
 if __name__ == "__main__":
