@@ -100,6 +100,8 @@ def upload_file_s3():
     except Exception as e:
         app.logger.error("Failed to delete file: %s", str(e))
         return jsonify({"error": f"Failed to delete file: {str(e)}", "code": -1}), 500
+    
+    return jsonify({"status": "File uploaded and deleted successfully", "code": 0}), 200
 
 
 if __name__ == "__main__":
