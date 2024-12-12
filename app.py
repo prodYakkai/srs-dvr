@@ -28,6 +28,11 @@ blob_service_client = BlobServiceClient.from_connection_string(AZURE_CONNECTION_
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.DEBUG)
 
+@app.route("/ping", methods=["GET"])
+def ping():
+    if not AZURE_CONNECTION_STRING or (not S3_ACCESS_KEY and not S3_SECRET_KEY):
+        return jsonify({"error": "connection string not found", "code": -1}), 500
+    return jsonify({"status": "pong"}), 200
 
 @app.route("/dvr/azure", methods=["POST"])
 def upload_file_azure():
