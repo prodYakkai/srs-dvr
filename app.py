@@ -6,6 +6,7 @@ import logging
 import sys
 import time
 import boto3
+from urllib.parse import parse_qs, urlparse
 
 load_dotenv()
 app = Flask(__name__)
@@ -39,11 +40,18 @@ def upload_file_azure():
     data = request.get_json()
 
     app.logger.debug("Received payload: %s", data)
-
+    url_params = parse_qs(urlparse(data.get('param')).query)
+    dvr_use = 'true'
+    if url_params.get('dvr'):
+        dvr_use = url_params.get('dvr')[0]
     # Extract file path from the received data
     file_path = data.get("file")
     if not file_path or not os.path.isfile(file_path):
         return jsonify({"error": "File not found", "code": -1}), 404
+    
+    if dvr_use == 'false':
+        os.remove(file_path)
+        return jsonify({"status": "dvr_use is false", "code": 0}), 200
 
     # Extract the filename and use it for Blob Storage
     file_name = os.path.basename(file_path)
@@ -78,11 +86,19 @@ def upload_file_s3():
     data = request.get_json()
 
     app.logger.debug("Received payload: %s", data)
+    url_params = parse_qs(urlparse(data.get('param')).query)
+    dvr_use = 'true'
+    if url_params.get('dvr'):
+        dvr_use = url_params.get('dvr')[0]
 
     # Extract file path from the received data
     file_path = data.get("file")
     if not file_path or not os.path.isfile(file_path):
         return jsonify({"error": "File not found", "code": -1}), 404
+    
+    if dvr_use == 'false':
+        os.remove(file_path)
+        return jsonify({"status": "dvr_use is false", "code": 0}), 200
 
     # Extract the filename and use it for Blob Storage
     file_name = os.path.basename(file_path)

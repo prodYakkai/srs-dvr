@@ -11,6 +11,9 @@ COPY . /app
 # Install the required packages
 RUN uv sync --frozen
 
+# Install wget for healthcheck
+RUN apt-get update && apt-get install -y wget
+
 # Expose the port the app runs on
 EXPOSE 5000
 
